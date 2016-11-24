@@ -55,7 +55,7 @@ body {
     display: inline-block;
 }
 
-.slider-container {
+.message-container {
   display: table-cell;
   vertical-align: middle;
   height: 2em;
@@ -90,7 +90,7 @@ body {
   font-size: 1em;
 }
 
-.slider {
+.text {
   vertical-align: middle;
 }
 

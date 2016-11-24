@@ -23,6 +23,7 @@ module.exports = NodeHelper.create({
 		self.loadTranslation("en");
 
 		this.template = "";
+		this.configData = {};
 
 		fs.readFile(path.resolve(__dirname + "/display.html"), function(err, data) {
 			self.template = data.toString();
@@ -73,7 +74,7 @@ module.exports = NodeHelper.create({
 		if (query.action === 'MESSAGE')
 		{
 			res.send({'status': 'success'});
-			self.sendSocketNotification(query.action);
+			self.sendSocketNotification(query.action, {value: query.value});
 			return true;
 		}
 		return false;
@@ -112,11 +113,11 @@ module.exports = NodeHelper.create({
 
 		//Set default vaues here
 
-		// var brightness = 100;
-		// if (this.configData) {
-		// 	brightness = this.configData.brightness;
-		// }
-		// data = data.replace("%%REPLACE::BRIGHTNESS%%", brightness);
+		var defaultMessage = "";
+		if (this.configData.defaultMessage) {
+			defaultMessage = this.configData.defaultMessage;
+		}
+		data = data.replace("%%REPLACE::DEFAULT_MESSAGE%%", defaultMessage);
 
 		// var moduleData = this.configData.moduleData;
 		// if (!moduleData) {
@@ -176,9 +177,10 @@ module.exports = NodeHelper.create({
 	socketNotificationReceived: function(notification, payload) {
 		var self = this;
 
-		if (notification === "LANG")
+		if (notification === "INIT")
 		{
-			self.loadTranslation(payload);
+			self.configData = payload;
+			self.loadTranslation(self.configData.lang);
 
 			// module started, do/send anything here required.
 		}

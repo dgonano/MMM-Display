@@ -42,8 +42,7 @@ Module.register("MMM-Display", {
 		} else { 
 			if (notification === "DOM_OBJECTS_CREATED") {
 				//Started, send language
-				this.sendSocketNotification("LANG", config.language);
-				// this.updateDom();
+				this.sendSocketNotification("INIT", {lang: config.language, defaultMessage: this.config.defaultMessage});
 			}
 		}
 	},
@@ -51,6 +50,10 @@ Module.register("MMM-Display", {
 	// Override socket notification handler.
 	socketNotificationReceived: function(notification, payload) {
 		if (notification === "MESSAGE") {
+			Log.log(payload);
+			//record message
+			this.message = payload.value;
+
 			//Clear and Set new timeout.
 			var self = this;
 			clearTimeout(this.timeoutID);
@@ -69,6 +72,9 @@ Module.register("MMM-Display", {
 			return wrapper;
 		} 
 		//Show message
+		if (!this.message) {
+			this.message = this.config.defaultMessage;
+		}
 		wrapper.innerHTML = this.message;
 		wrapper.className = "normal large light";
 		return wrapper;

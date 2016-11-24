@@ -97,7 +97,7 @@ var buttons = {
         window.location.hash = 'main-menu';
     },
     'message-button': function () {
-        Remote.getWithStatus("action=MESSAGE");
+        Remote.getWithStatus("action=MESSAGE&value=" + document.getElementById("message-input").value);
     }
 }
 
